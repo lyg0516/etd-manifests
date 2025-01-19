@@ -3,8 +3,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ .Values.palworld.name }}
-  name: {{ .Values.palworld.name }}
+    app: {{ .Release.Name }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
