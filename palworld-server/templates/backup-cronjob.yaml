@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "5,15,25,35,45,55 * * * *"  # 매일 새벽 3시 실행
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: backup-job-sa  # 🔥 RBAC 필요
+          containers:
+            - name: backup-uploader
+              image: google/cloud-sdk:latest  # ✅ gsutil 포함된 이미지
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/bash", "-c"]
+              args:
+                - |
+                  chmod +x /scripts/upload_backup.sh
+                  /scripts/upload_backup.sh
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: /secrets/key.json
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /palworld/backups
+                - name: scripts
+                  mountPath: /scripts
+                - name: gcs-secret
+                  mountPath: /secrets
+                  readOnly: true
+          restartPolicy: OnFailure
+          volumes:
+            - name: backup-storage
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}
+            - name: scripts
+              configMap:
+                name: {{ .Release.Name }}-backup-script
+            - name: gcs-secret
+              projected:
+                sources:
+                  - secret:
+                      name: gcs-key  #
+                      namespace: gcs
