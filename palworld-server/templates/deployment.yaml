@@ -12,14 +12,14 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Values.palworld.name }}
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.palworld.name }}
+        app: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Values.palworld.name }}
+        - name: {{ .Release.Name }}
           image: thijsvanloef/palworld-server-docker # 추후 이미지 업데이트 고려해보기
           imagePullPolicy: IfNotPresent
           ports:
@@ -33,15 +33,15 @@ spec:
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.palworld.name }}-secrets
+                  name: {{ .Release.Name }}-secrets
                   key: rconPassword
           envFrom:
             - configMapRef:
-                name: {{ .Values.palworld.name }}-cm
+                name: {{ .Release.Name }}-cm
           volumeMounts:
             - mountPath: /palworld
               name: datadir
       volumes:
         - name: datadir
           persistentVolumeClaim:
-            claimName: {{ .Values.palworld.name }}
+            claimName: {{ .Release.Name }}

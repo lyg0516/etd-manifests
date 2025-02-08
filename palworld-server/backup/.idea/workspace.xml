@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="395d7ec8-af93-4c87-94d4-303436fe38ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backup.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../templates/pvc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../templates/pvc.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="395d7ec8-af93-4c87-94d4-303436fe38ce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
