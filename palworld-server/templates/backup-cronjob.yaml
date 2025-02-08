@@ -4,15 +4,24 @@ metadata:
   name: {{ .Release.Name }}-backup
   namespace: {{ .Release.Namespace }}
 spec:
-  schedule: "5,15,25,35,45,55 * * * *"  # 매일 새벽 3시 실행
+  schedule: "5,15,25,35 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
-          serviceAccountName: backup-job-sa  # 🔥 RBAC 필요
+          serviceAccountName: backup-job-sa
+          initContainers:
+            - name: secret-copier
+              image: bitnami/kubectl:latest
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  kubectl get secret gcs-key -n gcs -o yaml | \
+                  sed 's/namespace: gcs/namespace: {{ .Release.Namespace }}/' | \
+                  kubectl apply -f -
           containers:
             - name: backup-uploader
-              image: google/cloud-sdk:latest  # ✅ gsutil 포함된 이미지
+              image: google/cloud-sdk:latest
               imagePullPolicy: IfNotPresent
               command: ["/bin/bash", "-c"]
               args:
@@ -39,8 +48,5 @@ spec:
               configMap:
                 name: {{ .Release.Name }}-backup-script
             - name: gcs-secret
-              projected:
-                sources:
-                  - secret:
-                      name: gcs-key  #
-                      namespace: gcs
+              secret:
+                secretName: gcs-key  # ✅ 이제 현재 네임스페이스에 있는 Secret을 사용
