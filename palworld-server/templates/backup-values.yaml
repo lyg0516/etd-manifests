@@ -1,3 +1,0 @@
-backup:
-  gcsBucket: "etd-test-bucket"
-  gcsFolder: "backup"
