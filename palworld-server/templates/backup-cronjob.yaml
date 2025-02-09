@@ -10,6 +10,21 @@ spec:
       template:
         spec:
           serviceAccountName: backup-job-sa
+          securityContext:
+            fsGroup: 1000  # ✅ 기본 그룹 권한 설정 (일부 PVC에는 적용 안 될 수도 있음)
+          initContainers:
+            - name: volume-fixer
+              image: busybox
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  chmod -R 777 /palworld/backups
+                  chmod -R 777 /scripts
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /palworld/backups
+                - name: scripts
+                  mountPath: /scripts
           containers:
             - name: backup-uploader
               image: google/cloud-sdk:latest
@@ -41,4 +56,4 @@ spec:
                 defaultMode: 0755 
             - name: gcs-secret
               secret:
-                secretName: gcs-key  # ✅ 이제 현재 네임스페이스에 있는 Secret을 사용
+                secretName: gcs-key
