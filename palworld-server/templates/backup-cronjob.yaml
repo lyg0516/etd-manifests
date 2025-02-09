@@ -14,7 +14,6 @@ spec:
             fsGroup: 1000  # ✅ 기본 그룹 권한 설정 (일부 PVC에는 적용 안 될 수도 있음)
             runAsUser: 1000       # 컨테이너 내부 사용자 ID 변경 (비-root)
             runAsGroup: 1000      # 그룹 변경
-            fsGroup: 1000         # 파일 시스템 그룹 변경 (NFS, Filestore에 적용 가능)
           containers:
             - name: backup-uploader
               image: google/cloud-sdk:latest
