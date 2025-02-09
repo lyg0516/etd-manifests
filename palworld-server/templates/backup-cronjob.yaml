@@ -43,7 +43,7 @@ spec:
           volumes:
             - name: backup-storage
               persistentVolumeClaim:
-                claimName: test
+                claimName: {{ .Release.Name }}
             - name: scripts
               configMap:
                 name: {{ .Release.Name }}-backup-script
