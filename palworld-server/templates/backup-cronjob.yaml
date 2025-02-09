@@ -38,6 +38,7 @@ spec:
             - name: scripts
               configMap:
                 name: {{ .Release.Name }}-backup-script
+                defaultMode: 0755 
             - name: gcs-secret
               secret:
                 secretName: gcs-key  # ✅ 이제 현재 네임스페이스에 있는 Secret을 사용
