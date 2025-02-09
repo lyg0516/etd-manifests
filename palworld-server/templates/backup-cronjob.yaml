@@ -4,21 +4,12 @@ metadata:
   name: {{ .Release.Name }}-backup
   namespace: {{ .Release.Namespace }}
 spec:
-  schedule: "5,15,25,35 * * * *"
+  schedule: "5,15,25,35,45,55 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           serviceAccountName: backup-job-sa
-          initContainers:
-            - name: secret-copier
-              image: bitnami/kubectl:latest
-              command: ["/bin/sh", "-c"]
-              args:
-                - |
-                  kubectl get secret gcs-key -n gcs -o yaml | \
-                  sed 's/namespace: gcs/namespace: {{ .Release.Namespace }}/' | \
-                  kubectl apply -f -
           containers:
             - name: backup-uploader
               image: google/cloud-sdk:latest
